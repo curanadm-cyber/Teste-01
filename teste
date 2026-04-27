@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>AdminFlow | Dashboard & Contato</title>
+    <!-- Google Fonts e Font Awesome -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(145deg, #eef2f9 0%, #e0e8f2 100%);
+            color: #1a2c3e;
+            transition: all 0.2s ease;
+            scroll-behavior: smooth;
+        }
+
+        /* Layout wrapper */
+        .app-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 1.8rem 2rem 3rem;
+        }
+
+        /* NAVEGAÇÃO DINÂMICA */
+        .nav-bar {
+            background: rgba(255,255,255,0.75);
+            backdrop-filter: blur(12px);
+            border-radius: 3rem;
+            padding: 0.8rem 2rem;
+            margin-bottom: 2.5rem;
+            box-shadow: 0 12px 28px -8px rgba(0,0,0,0.1), inset 0 1px 0 rgba(255,255,255,0.6);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            border: 1px solid rgba(255,255,255,0.8);
+        }
+
+        .logo h2 {
+            font-weight: 800;
+            background: linear-gradient(135deg, #1E3C72, #2A5298);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            letter-spacing: -0.5px;
+            font-size: 1.8rem;
+        }
+        .logo span {
+            font-size: 1rem;
+            font-weight: 500;
+            background: none;
+            color: #4a627a;
+            letter-spacing: 0;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 1rem;
+        }
+        .nav-btn {
+            background: transparent;
+            border: none;
+            font-size: 1.1rem;
+            font-weight: 600;
+            padding: 0.7rem 1.6rem;
+            border-radius: 2.5rem;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+            color: #2c3e66;
+            font-family: inherit;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            backdrop-filter: blur(4px);
+        }
+        .nav-btn i {
+            font-size: 1.2rem;
+        }
+        .nav-btn.active {
+            background: linear-gradient(105deg, #1e2f4b, #14273e);
+            color: white;
+            box-shadow: 0 8px 18px rgba(0,20,50,0.2), inset 0 1px 0 rgba(255,255,255,0.2);
+        }
+        .nav-btn:not(.active):hover {
+            background: rgba(255,255,255,0.7);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 12px rgba(0,0,0,0.05);
+            color: #0f2b44;
+        }
+
+        /* PÁGINAS via JS */
+        .page {
+            display: none;
+            animation: fadeSlideUp 0.45s ease forwards;
+        }
+        .page.active-page {
+            display: block;
+        }
+
+        @keyframes fadeSlideUp {
+            0% { opacity: 0; transform: translateY(12px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ----- HOME: BLOCOS DINÂMICOS E CARDS ----- */
+        .hero-banner {
+            background: linear-gradient(112deg, #0b2b44, #1a4c6e);
+            border-radius: 2rem;
+            padding: 2rem 3rem;
+            margin-bottom: 2.8rem;
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+            box-shadow: 0 25px 35px -12px rgba(0,0,0,0.25);
+        }
+        .hero-text h1 {
+            font-size: 2.6rem;
+            font-weight: 800;
+            letter-spacing: -1px;
+        }
+        .hero-text p {
+            margin-top: 0.5rem;
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+        .cta-btn {
+            background: #ffb347;
+            border: none;
+            padding: 0.9rem 2rem;
+            border-radius: 3rem;
+            font-weight: bold;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: 0.2s;
+            color: #221c0e;
+            font-family: inherit;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+        .cta-btn:hover {
+            background: #ff9f1a;
+            transform: scale(1.03);
+            box-shadow: 0 8px 18px rgba(0,0,0,0.2);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 1.8rem;
+            margin-bottom: 3rem;
+        }
+        .stat-card {
+            background: rgba(255,255,255,0.7);
+            backdrop-filter: blur(10px);
+            border-radius: 1.8rem;
+            padding: 1.5rem 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            box-shadow: 0 12px 28px -10px rgba(0,0,0,0.08);
+            transition: all 0.25s ease;
+            border: 1px solid rgba(255,255,255,0.9);
+        }
+        .stat-card:hover {
+            transform: translateY(-6px);
+            background: white;
+            box-shadow: 0 22px 32px -14px rgba(0,0,0,0.15);
+        }
+        .stat-icon {
+            font-size: 2.7rem;
+            background: linear-gradient(145deg, #2a6f8f, #1e4c66);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+        }
+        .stat-info h3 {
+            font-size: 1.9rem;
+            font-weight: 800;
+        }
+        .stat-info p {
+            color: #3e5a6c;
+            font-weight: 500;
+        }
+
+        /* galeria de imagens online + cartões admin */
+        .section-title {
+            font-size: 1.7rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border-left: 6px solid #2a6f8f;
+            padding-left: 1rem;
+        }
+        .image-gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.8rem;
+            margin-bottom: 2.5rem;
+        }
+        .gallery-card {
+            background: white;
+            border-radius: 1.8rem;
+            overflow: hidden;
+            transition: all 0.3s;
+            box-shadow: 0 12px 20px -12px rgba(0,0,0,0.1);
+        }
+        .gallery-card:hover {
+            transform: scale(1.02);
+            box-shadow: 0 20px 30px -12px rgba(0,0,0,0.2);
+        }
+        .gallery-card img {
+            width: 100%;
+            height: 190px;
+            object-fit: cover;
+            transition: 0.4s;
+        }
+        .card-info {
+            padding: 1.2rem;
+        }
+        .card-info h4 {
+            font-weight: 800;
+            margin-bottom: 0.3rem;
+        }
+        .card-info p {
+            color: #4b6a82;
+            font-size: 0.9rem;
+        }
+        .dynamic-btn {
+            margin-top: 0.8rem;
+            background: #eef2ff;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 2rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+            font-size: 0.8rem;
+        }
+        .dynamic-btn:hover {
+            background: #1a4c6e;
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        /* ---- PÁGINA CONTATO / FORMULÁRIO ADMIN ---- */
+        .contact-wrapper {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 2.5rem;
+            margin-top: 1rem;
+        }
+        .contact-form-box {
+            flex: 2;
+            min-width: 280px;
+            background: rgba(255,255,255,0.7);
+            backdrop-filter: blur(8px);
+            border-radius: 2rem;
+            padding: 2rem;
+            box-shadow: 0 20px 35px -12px rgba(0,0,0,0.1);
+            border: 1px solid rgba(255,255,255,0.8);
+        }
+        .contact-info {
+            flex: 1.5;
+            background: linear-gradient(125deg, #1f3a4b, #0f2a38);
+            border-radius: 2rem;
+            padding: 2rem;
+            color: white;
+            box-shadow: 0 24px 36px -16px rgba(0,0,0,0.25);
+        }
+        .form-group {
+            margin-bottom: 1.4rem;
+        }
+        label {
+            font-weight: 600;
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #1a3a4e;
+        }
+        input, textarea {
+            width: 100%;
+            padding: 0.9rem 1.2rem;
+            border-radius: 1.5rem;
+            border: 1px solid #cbdbe0;
+            background: white;
+            font-family: inherit;
+            transition: 0.2s;
+            outline: none;
+        }
+        input:focus, textarea:focus {
+            border-color: #2a6f8f;
+            box-shadow: 0 0 0 3px rgba(42,111,143,0.2);
+        }
+        .submit-btn {
+            background: linear-gradient(95deg, #22668d, #1e4f70);
+            color: white;
+            border: none;
+            padding: 0.9rem 1.8rem;
+            border-radius: 2.5rem;
+            font-weight: bold;
+            font-size: 1rem;
+            cursor: pointer;
+            width: 100%;
+            transition: all 0.2s;
+        }
+        .submit-btn:hover {
+            background: #0f3e5a;
+            transform: translateY(-2px);
+            box-shadow: 0 7px 14px rgba(0,0,0,0.15);
+        }
+        .contact-info h3 {
+            font-size: 1.9rem;
+            margin-bottom: 1rem;
+        }
+        .contact-info p {
+            margin: 1rem 0;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .success-message {
+            background: #dcfce7;
+            color: #15803d;
+            padding: 0.8rem;
+            border-radius: 2rem;
+            margin-top: 1rem;
+            text-align: center;
+            font-weight: 500;
+        }
+
+        footer {
+            margin-top: 3.5rem;
+            text-align: center;
+            padding: 1.5rem;
+            border-top: 1px solid rgba(0,0,0,0.05);
+            font-size: 0.85rem;
+            color: #4b6f8c;
+        }
+
+        @media (max-width: 700px) {
+            .app-container {
+                padding: 1rem;
+            }
+            .hero-text h1 {
+                font-size: 1.8rem;
+            }
+            .nav-bar {
+                flex-direction: column;
+                gap: 1rem;
+                align-items: stretch;
+                border-radius: 2rem;
+            }
+            .nav-links {
+                justify-content: center;
+            }
+        }
+        button {
+            background: none;
+            border: none;
+        }
+    </style>
+</head>
+<body>
+<div class="app-container">
+    <!-- BARRA DE NAVEGAÇÃO DINÂMICA -->
+    <div class="nav-bar">
+        <div class="logo">
+            <h2>AdminFlow <span>| gestão inteligente</span></h2>
+        </div>
+        <div class="nav-links">
+            <button class="nav-btn active" id="btnHome"><i class="fas fa-tachometer-alt"></i> Home</button>
+            <button class="nav-btn" id="btnContato"><i class="fas fa-headset"></i> Contato</button>
+        </div>
+    </div>
+
+    <!-- PÁGINA HOME -->
+    <div id="homePage" class="page active-page">
+        <!-- Banner hero -->
+        <div class="hero-banner">
+            <div class="hero-text">
+                <h1>Painel Administrativo</h1>
+                <p>Visão geral, métricas e gestão em tempo real.</p>
+            </div>
+            <button class="cta-btn" id="dashExploreBtn"><i class="fas fa-chart-line"></i> Explorar métricas</button>
+        </div>
+
+        <!-- Blocos estatísticos dinâmicos -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon"><i class="fas fa-users"></i></div>
+                <div class="stat-info">
+                    <h3 id="userCount">1.248</h3>
+                    <p>Usuários ativos</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon"><i class="fas fa-chart-simple"></i></div>
+                <div class="stat-info">
+                    <h3 id="revenueCount">R$ 87.4k</h3>
+                    <p>Receita mensal</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon"><i class="fas fa-clock"></i></div>
+                <div class="stat-info">
+                    <h3 id="sessionCount">342</h3>
+                    <p>Sessões hoje</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Galeria de imagens online com cartões dinâmicos (blocos) -->
+        <div class="section-title">
+            <i class="fas fa-images"></i>  <span>Recursos & Infraestrutura</span>
+        </div>
+        <div class="image-gallery" id="imageGallery">
+            <!-- imagens serão inseridas via JS para garantir URLs online atualizadas e dinâmicas -->
+        </div>
+
+        <!-- Bloco extra de administração rápida -->
+        <div class="stats-grid" style="grid-template-columns: 1fr 1fr;">
+            <div class="stat-card" style="justify-content: space-between;">
+                <div><i class="fas fa-database fa-2x" style="color:#2a6f8f;"></i>  <strong>Backup automático</strong><p>Último sync: hoje 03:00</p></div>
+                <button class="dynamic-btn" id="backupBtn"><i class="fas fa-rotate-right"></i> Executar</button>
+            </div>
+            <div class="stat-card" style="justify-content: space-between;">
+                <div><i class="fas fa-bell fa-2x" style="color:#e67e22;"></i>  <strong>Alertas de sistema</strong><p>Nenhuma notificação pendente</p></div>
+                <button class="dynamic-btn" id="alertBtn"><i class="fas fa-envelope"></i> Ver todos</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- PÁGINA CONTATO (administração -> formulário e informações) -->
+    <div id="contatoPage" class="page">
+        <div class="contact-wrapper">
+            <div class="contact-form-box">
+                <h2><i class="fas fa-pen-alt"></i> Solicitar contato administrativo</h2>
+                <p style="margin-bottom: 1.5rem;">Envie sua mensagem para a equipe de suporte.</p>
+                <form id="adminContactForm">
+                    <div class="form-group">
+                        <label><i class="fas fa-user"></i> Nome completo</label>
+                        <input type="text" id="contactName" placeholder="Digite seu nome" required>
+                    </div>
+                    <div class="form-group">
+                        <label><i class="fas fa-envelope"></i> E-mail institucional</label>
+                        <input type="email" id="contactEmail" placeholder="admin@exemplo.com" required>
+                    </div>
+                    <div class="form-group">
+                        <label><i class="fas fa-comment-dots"></i> Mensagem / Assunto</label>
+                        <textarea rows="4" id="contactMsg" placeholder="Descreva sua solicitação..."></textarea>
+                    </div>
+                    <button type="submit" class="submit-btn"><i class="fas fa-paper-plane"></i> Enviar mensagem</button>
+                    <div id="formFeedback"></div>
+                </form>
+            </div>
+            <div class="contact-info">
+                <h3><i class="fas fa-address-card"></i> Central Admin</h3>
+                <p><i class="fas fa-map-marker-alt"></i> Av. Corporativa, 1200 - São Paulo/SP</p>
+                <p><i class="fas fa-phone-alt"></i> +55 (11) 4002-8922</p>
+                <p><i class="fas fa-clock"></i> Atendimento: 08h - 18h (seg-sex)</p>
+                <p><i class="fas fa-shield-alt"></i> Canal seguro para gestores</p>
+                <div style="margin-top: 2rem; background: rgba(255,255,255,0.15); border-radius: 1.5rem; padding: 1rem;">
+                    <i class="fas fa-headset"></i> <strong>Suporte 24h admin</strong> <br> chat administrativo via e-mail
+                </div>
+            </div>
+        </div>
+    </div>
+    <footer>
+        <p>© 2025 AdminFlow — Dashboard de gestão moderna | imagens licenciadas via pexels/picsum</p>
+    </footer>
+</div>
+
+<script>
+    // ---- Elementos DOM e navegação ----
+    const homePage = document.getElementById('homePage');
+    const contatoPage = document.getElementById('contatoPage');
+    const btnHome = document.getElementById('btnHome');
+    const btnContato = document.getElementById('btnContato');
+
+    function setActivePage(pageId) {
+        homePage.classList.remove('active-page');
+        contatoPage.classList.remove('active-page');
+        if (pageId === 'home') {
+            homePage.classList.add('active-page');
+            btnHome.classList.add('active');
+            btnContato.classList.remove('active');
+        } else {
+            contatoPage.classList.add('active-page');
+            btnContato.classList.add('active');
+            btnHome.classList.remove('active');
+        }
+    }
+
+    btnHome.addEventListener('click', () => setActivePage('home'));
+    btnContato.addEventListener('click', () => setActivePage('contato'));
+
+    // ------ Dados dinâmicos home: atualização de estatísticas com JS interativo ------
+    // funções para simular atualização de dados ao clicar em botões e métricas dinâmicas
+    const userCountEl = document.getElementById('userCount');
+    const revenueEl = document.getElementById('revenueCount');
+    const sessionEl = document.getElementById('sessionCount');
+
+    function updateStats() {
+        // valores "administrativos" flutuantes
+        const newUsers = Math.floor(1200 + Math.random() * 180);
+        const newRevenue = (75 + Math.random() * 25).toFixed(1);
+        const newSessions = Math.floor(280 + Math.random() * 140);
+        userCountEl.innerText = newUsers.toLocaleString();
+        revenueEl.innerText = `R$ ${newRevenue}k`;
+        sessionEl.innerText = newSessions;
+    }
+
+    // Botão explorar métricas atualiza estatísticas e mostra alerta suave
+    document.getElementById('dashExploreBtn')?.addEventListener('click', () => {
+        updateStats();
+        // feedback sutil via alert customizado? melhor notificação dinâmica leve
+        const tempDiv = document.createElement('div');
+        tempDiv.innerText = '✅ Métricas atualizadas em tempo real!';
+        tempDiv.style.position = 'fixed';
+        tempDiv.style.bottom = '20px';
+        tempDiv.style.right = '20px';
+        tempDiv.style.background = '#1f3e48';
+        tempDiv.style.color = 'white';
+        tempDiv.style.padding = '12px 20px';
+        tempDiv.style.borderRadius = '40px';
+        tempDiv.style.fontWeight = 'bold';
+        tempDiv.style.zIndex = '999';
+        tempDiv.style.boxShadow = '0 5px 15px rgba(0,0,0,0.2)';
+        document.body.appendChild(tempDiv);
+        setTimeout(() => tempDiv.remove(), 2300);
+    });
+
+    // backup e alert botões com ação
+    const backupBtn = document.getElementById('backupBtn');
+    if(backupBtn) {
+        backupBtn.addEventListener('click', () => {
+            alert('🔄 Backup manual solicitado. Processo simulado com sucesso!');
+        });
+    }
+    const alertBtn = document.getElementById('alertBtn');
+    if(alertBtn) {
+        alertBtn.addEventListener('click', () => {
+            alert('📋 Nenhum alerta crítico no momento. Sistema operacional.');
+        });
+    }
+
+    // ----- Galeria de imagens ONLINE (várias imagens via Unsplash/Loremflick para estética) ----
+    // Utilizaremos imagens online confiáveis hospedadas em CDN (Picsum + placeholder com temática admin/tech)
+    const galleryData = [
+        { title: "Infraestrutura Cloud", desc: "Servidores e segurança avançada", imgUrl: "https://picsum.photos/id/104/400/240?grayscale", tag: "data center" },
+        { title: "Equipe Administrativa", desc: "Gestão colaborativa e métricas", imgUrl: "https://picsum.photos/id/20/400/240", tag: "escritório" },
+        { title: "Dashboard Analytics", desc: "Relatórios em tempo real", imgUrl: "https://picsum.photos/id/26/400/240", tag: "relatórios" },
+        { title: "Suporte Técnico", desc: "Plataforma responsiva 24/7", imgUrl: "https://picsum.photos/id/91/400/240", tag: "atendimento" }
+    ];
+
+    function buildGallery() {
+        const galleryContainer = document.getElementById('imageGallery');
+        if(!galleryContainer) return;
+        galleryContainer.innerHTML = '';
+        galleryData.forEach((item, idx) => {
+            const card = document.createElement('div');
+            card.className = 'gallery-card';
+            card.innerHTML = `
+                <img src="${item.imgUrl}" alt="${item.title}" loading="lazy" onerror="this.src='https://picsum.photos/id/1/400/240'">
+                <div class="card-info">
+                    <h4><i class="fas fa-cube"></i> ${item.title}</h4>
+                    <p>${item.desc}</p>
+                    <button class="dynamic-btn" data-gallery-idx="${idx}"><i class="fas fa-chart-simple"></i> Gerenciar recurso</button>
+                </div>
+            `;
+            galleryContainer.appendChild(card);
+        });
+        // adicionar eventos para os botões dinâmicos da galeria
+        const dynamicGalleryBtns = document.querySelectorAll('#imageGallery .dynamic-btn');
+        dynamicGalleryBtns.forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const idx = btn.getAttribute('data-gallery-idx');
+                const selected = galleryData[idx];
+                alert(`🔧 Ação administrativa: Gerenciar ${selected.title}.\nRecurso disponível para toda equipe.`);
+            });
+        });
+    }
+
+    // formulário de contato com validação e simulação de envio
+    const contactForm = document.getElementById('adminContactForm');
+    const feedbackDiv = document.getElementById('formFeedback');
+    if(contactForm) {
+        contactForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const name = document.getElementById('contactName').value.trim();
+            const email = document.getElementById('contactEmail').value.trim();
+            const message = document.getElementById('contactMsg').value.trim();
+            if(!name || !email || !message) {
+                feedbackDiv.innerHTML = '<div class="success-message" style="background:#ffe6e6; color:#b91c1c;">⚠️ Preencha todos os campos.</div>';
+                setTimeout(() => feedbackDiv.innerHTML = '', 2500);
+                return;
+            }
+            if(!email.includes('@') || !email.includes('.')) {
+                feedbackDiv.innerHTML = '<div class="success-message" style="background:#ffe6e6; color:#b91c1c;">📧 E-mail inválido!</div>';
+                setTimeout(() => feedbackDiv.innerHTML = '', 2500);
+                return;
+            }
+            // Simulação de envio para administração
+            feedbackDiv.innerHTML = '<div class="success-message"><i class="fas fa-check-circle"></i> Mensagem encaminhada para o time administrativo! Responderemos em até 24h.</div>';
+            contactForm.reset();
+            setTimeout(() => {
+                if(feedbackDiv) feedbackDiv.innerHTML = '';
+            }, 4000);
+        });
+    }
+
+    // Inicialização assíncrona / preencher e também atualizar estatísticas periodicamente?
+    // definir alguns valores aleatórios mas manter base legal
+    function initStatsAlternate() {
+        // valores realistas sem perder coerência
+        userCountEl.innerText = '1,286';
+        revenueEl.innerText = 'R$ 92.3k';
+        sessionEl.innerText = '412';
+    }
+    initStatsAlternate();
+
+    // adicionar interação extra: ao clicar nos cards, efeito visual
+    document.querySelectorAll('.stat-card').forEach(card => {
+        card.addEventListener('click', () => {
+            card.style.transform = 'scale(0.98)';
+            setTimeout(() => { card.style.transform = ''; }, 150);
+        });
+    });
+
+    // construção da galeria e ativação final
+    buildGallery();
+
+    // Caso algum botão extra para notificar no home -> estatísticas com update
+    // também fornecemos atualização suave ao alternar páginas
+    window.addEventListener('load', () => {
+        // garantir estilos carregados e imagens online
+        console.log('Admin site pronto - UI com blocos dinâmicos');
+        // pequeno efeito de boas-vindas console
+        const style = document.createElement('style');
+        style.innerText = '.page { transition: opacity 0.2s; }';
+        document.head.appendChild(style);
+    });
+</script>
+</body>
+</html>
